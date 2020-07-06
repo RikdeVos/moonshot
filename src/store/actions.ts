@@ -1,8 +1,17 @@
-import { ActionTypes, LOAD_LAUNCHES, LOADED_LAUNCHES, LOAD_AGENCIES, LOADED_AGENCIES } from './types';
+import {
+  ActionTypes,
+  LOAD_LAUNCHES,
+  LOADED_LAUNCHES,
+  LOAD_AGENCIES,
+  LOADED_AGENCIES,
+} from './types';
 import { Launch } from '../models/launch.interface';
 import { Agency } from '../models/agency.interface';
 
-export function loadLaunches(startDate: moment.Moment, endDate: moment.Moment): ActionTypes {
+export function loadLaunches(
+  startDate: moment.Moment,
+  endDate: moment.Moment
+): ActionTypes {
   return {
     type: LOAD_LAUNCHES,
     payload: { startDate, endDate },

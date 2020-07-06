@@ -14,7 +14,13 @@ const mapState = (state: RootState) => ({
 });
 
 const mapDispatch = {
-  submit: ({ startDate, endDate }: { startDate: moment.Moment; endDate: moment.Moment }) => ({
+  submit: ({
+    startDate,
+    endDate,
+  }: {
+    startDate: moment.Moment;
+    endDate: moment.Moment;
+  }) => ({
     type: LOAD_LAUNCHES,
     payload: { startDate, endDate },
   }),
@@ -88,7 +94,10 @@ class Launches extends React.Component<IProps, IState> {
 
   submitForm(event: any) {
     event.preventDefault();
-    this.props.submit({ startDate: this.state.startDate, endDate: this.state.endDate });
+    this.props.submit({
+      startDate: this.state.startDate,
+      endDate: this.state.endDate,
+    });
 
     // Fetch launches
   }
@@ -97,7 +106,10 @@ class Launches extends React.Component<IProps, IState> {
     return (
       <>
         <h1>🚀📆 Moonshot</h1>
-        <form className="Launches-form" onSubmit={(event) => this.submitForm(event)}>
+        <form
+          className="Launches-form"
+          onSubmit={(event) => this.submitForm(event)}
+        >
           <FormDate
             title="Start Date"
             changed={(event) => this.startDateChanged(event)}

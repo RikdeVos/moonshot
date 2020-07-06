@@ -1,4 +1,11 @@
-import { RootState, ActionTypes, LOAD_LAUNCHES, LOADED_LAUNCHES, LOAD_AGENCIES, LOADED_AGENCIES } from './types';
+import {
+  RootState,
+  ActionTypes,
+  LOAD_LAUNCHES,
+  LOADED_LAUNCHES,
+  LOAD_AGENCIES,
+  LOADED_AGENCIES,
+} from './types';
 import moment from 'moment';
 
 const initialState: RootState = {

@@ -15,7 +15,10 @@ interface IProps {
 const formSelect: React.FunctionComponent<IProps> = (props: IProps) => (
   <label className="FormSelect">
     <strong>{props.title}</strong>
-    <select value={props.value} onChange={(event) => props.changed(event.target.value)}>
+    <select
+      value={props.value}
+      onChange={(event) => props.changed(event.target.value)}
+    >
       <option value="0">Select a value</option>
       {props.options.map((option) => (
         <option key={option.value} value={option.value}>

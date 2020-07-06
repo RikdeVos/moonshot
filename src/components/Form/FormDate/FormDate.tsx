@@ -15,7 +15,9 @@ const formDate: React.FunctionComponent<IProps> = (props: IProps) => (
     <input
       type="date"
       value={props.value.format('YYYY-MM-DD')}
-      onChange={(event) => props.changed(moment(event.target.value, 'YYYY-MM-DD'))}
+      onChange={(event) =>
+        props.changed(moment(event.target.value, 'YYYY-MM-DD'))
+      }
     />
   </label>
 );

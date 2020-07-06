@@ -34,4 +34,8 @@ interface LoadedAgenciesAction {
   payload: Agency[];
 }
 
-export type ActionTypes = LoadLaunchesAction | LoadedLaunchesAction | LoadAgenciesAction | LoadedAgenciesAction;
+export type ActionTypes =
+  | LoadLaunchesAction
+  | LoadedLaunchesAction
+  | LoadAgenciesAction
+  | LoadedAgenciesAction;

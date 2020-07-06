@@ -1,20 +1,30 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import './Launches.css';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
+import { uniqBy } from 'lodash';
 
 import axios from '../../axios-api';
 import { Agency } from '../../models/agency.interface';
-import { RootState, LOAD_LAUNCHES, LOADED_LAUNCHES } from '../../store/types';
+import {
+  RootState,
+  LOAD_LAUNCHES,
+  LOADED_LAUNCHES,
+  LOAD_AGENCIES,
+  LOADED_AGENCIES,
+} from '../../store/types';
 
 import FormDate from '../../components/Form/FormDate/FormDate';
 import FormSelect from '../../components/Form/FormSelect/FormSelect';
 import FormButton from '../../components/Form/FormButton/FormButton';
 import LaunchList from '../../components/LaunchList/LaunchList';
+import { Launch } from '../../models/launch.interface';
+import { getAgenciesInLaunch } from '../../utils/launchAgencies';
 
 const mapState = (state: RootState) => ({
   loading: state.loading,
   launches: state.launches,
+  agencies: state.agencies,
 });
 
 const mapDispatch = {
@@ -31,6 +41,13 @@ const mapDispatch = {
   loadedLaunches: (launches: Launches[]) => ({
     type: LOADED_LAUNCHES,
     payload: launches,
+  }),
+  loadAgencies: () => ({
+    type: LOAD_AGENCIES,
+  }),
+  loadedAgencies: (agencies: Agency[]) => ({
+    type: LOADED_AGENCIES,
+    payload: agencies,
   }),
 };
 
@@ -56,31 +73,12 @@ class Launches extends React.Component<IProps, IState> {
   };
 
   componentDidMount() {
-    this.setState({
-      agencies: [
-        {
-          id: 29,
-          name: 'German Aerospace Center',
-          countryCode: 'DEU',
-          abbrev: 'DLR',
-          type: 1,
-          infoURL: 'http://www.dlr.de/',
-          wikiURL: 'http://en.wikipedia.org/wiki/German_Aerospace_Center',
-          infoURLs: ['http://www.dlr.de/'],
-          islsp: 0,
-        },
-        {
-          id: 30,
-          name: 'Hungarian Space Office',
-          countryCode: 'HUN',
-          abbrev: 'HSO',
-          type: 1,
-          infoURL: 'http://www.hso.hu/',
-          wikiURL: 'http://en.wikipedia.org/wiki/Hungarian_Space_Office',
-          infoURLs: ['http://www.hso.hu/'],
-          islsp: 0,
-        },
-      ],
+    this.props.loadAgencies();
+
+    // Fetch agencies
+    axios.get(`/agency`).then((response) => {
+      // Dispatch action with fetched agencies
+      this.props.loadedAgencies(response.data.agencies);
     });
   }
 
@@ -93,7 +91,13 @@ class Launches extends React.Component<IProps, IState> {
   }
 
   agencyChanged(agencyId: string) {
-    console.log(agencyId);
+    this.setState({
+      agency:
+        this.props.agencies.find(
+          (agency) => agency.id === parseInt(agencyId)
+        ) || null,
+    });
+    // console.log(agencyId);
   }
 
   typeChanged(type: string) {
@@ -121,6 +125,14 @@ class Launches extends React.Component<IProps, IState> {
       .then((response) => {
         // Dispatch action with fetched launch dates
         this.props.loadedLaunches(response.data.launches);
+        const allAgencies = response.data.launches.reduce(
+          (all: Agency[], launch: Launch) => {
+            return [...all, ...getAgenciesInLaunch(launch)];
+          },
+          []
+        );
+        const uniqAgencies = uniqBy<Agency>(allAgencies, 'id');
+        this.props.loadedAgencies(uniqAgencies);
       });
   }
 
@@ -143,10 +155,10 @@ class Launches extends React.Component<IProps, IState> {
             value={this.state.endDate}
           ></FormDate>
           <FormSelect
-            title="Agencies"
+            title="Filter Agency"
             changed={(event) => this.agencyChanged(event)}
-            value={this.state.agency?.name}
-            options={this.state.agencies.map((agency) => ({
+            value={this.state.agency?.id.toString()}
+            options={this.props.agencies.map((agency) => ({
               value: agency.id.toString(),
               displayValue: agency.name,
             }))}
@@ -162,7 +174,10 @@ class Launches extends React.Component<IProps, IState> {
           ></FormSelect>
           <FormButton loading={this.props.loading}></FormButton>
         </form>
-        <LaunchList launches={this.props.launches}></LaunchList>
+        <LaunchList
+          launches={this.props.launches}
+          agency={this.state.agency}
+        ></LaunchList>
       </>
     );
   }

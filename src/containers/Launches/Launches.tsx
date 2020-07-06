@@ -7,8 +7,23 @@ import FormDate from '../../components/Form/FormDate/FormDate';
 import FormSelect from '../../components/Form/FormSelect/FormSelect';
 import FormButton from '../../components/Form/FormButton/FormButton';
 import { Agency } from '../../models/agency.interface';
+import { RootState, LOAD_LAUNCHES } from '../../store/types';
 
-type IProps = {};
+const mapState = (state: RootState) => ({
+  loading: state.loading,
+});
+
+const mapDispatch = {
+  submit: ({ startDate, endDate }: { startDate: moment.Moment; endDate: moment.Moment }) => ({
+    type: LOAD_LAUNCHES,
+    payload: { startDate, endDate },
+  }),
+};
+
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type IProps = PropsFromRedux & {};
 type IState = {
   startDate: moment.Moment;
   endDate: moment.Moment;
@@ -71,11 +86,18 @@ class Launches extends React.Component<IProps, IState> {
     console.log(type);
   }
 
+  submitForm(event: any) {
+    event.preventDefault();
+    this.props.submit({ startDate: this.state.startDate, endDate: this.state.endDate });
+
+    // Fetch launches
+  }
+
   render() {
     return (
       <>
         <h1>🚀📆 Moonshot</h1>
-        <form className="Launches-form">
+        <form className="Launches-form" onSubmit={(event) => this.submitForm(event)}>
           <FormDate
             title="Start Date"
             changed={(event) => this.startDateChanged(event)}
@@ -111,4 +133,4 @@ class Launches extends React.Component<IProps, IState> {
   }
 }
 
-export default Launches;
+export default connector(Launches);

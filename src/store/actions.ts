@@ -4,6 +4,7 @@ import {
   LOADED_LAUNCHES,
   LOAD_AGENCIES,
   LOADED_AGENCIES,
+  API_ERROR,
 } from './types';
 import { Launch } from '../models/launch.interface';
 import { Agency } from '../models/agency.interface';
@@ -32,5 +33,11 @@ export function loadedAgencies(agencies: Agency[]): ActionTypes {
   return {
     type: LOADED_AGENCIES,
     payload: agencies,
+  };
+}
+
+export function apiError(): ActionTypes {
+  return {
+    type: API_ERROR,
   };
 }

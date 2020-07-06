@@ -12,6 +12,7 @@ import {
   LOADED_LAUNCHES,
   LOAD_AGENCIES,
   LOADED_AGENCIES,
+  API_ERROR,
 } from '../../store/types';
 
 import FormDate from '../../components/Form/FormDate/FormDate';
@@ -25,6 +26,7 @@ const mapState = (state: RootState) => ({
   loading: state.loading,
   launches: state.launches,
   agencies: state.agencies,
+  hasError: state.error,
 });
 
 const mapDispatch = {
@@ -48,6 +50,9 @@ const mapDispatch = {
   loadedAgencies: (agencies: Agency[]) => ({
     type: LOADED_AGENCIES,
     payload: agencies,
+  }),
+  apiError: () => ({
+    type: API_ERROR,
   }),
 };
 
@@ -76,10 +81,15 @@ class Launches extends React.Component<IProps, IState> {
     this.props.loadAgencies();
 
     // Fetch agencies
-    axios.get(`/agency`).then((response) => {
-      // Dispatch action with fetched agencies
-      this.props.loadedAgencies(response.data.agencies);
-    });
+    axios
+      .get(`/agency`)
+      .then((response) => {
+        // Dispatch action with fetched agencies
+        this.props.loadedAgencies(response.data.agencies);
+      })
+      .catch(() => {
+        this.props.apiError();
+      });
   }
 
   startDateChanged(date: moment.Moment) {
@@ -133,6 +143,9 @@ class Launches extends React.Component<IProps, IState> {
         );
         const uniqAgencies = uniqBy<Agency>(allAgencies, 'id');
         this.props.loadedAgencies(uniqAgencies);
+      })
+      .catch(() => {
+        this.props.apiError();
       });
   }
 
@@ -174,6 +187,11 @@ class Launches extends React.Component<IProps, IState> {
           ></FormSelect>
           <FormButton loading={this.props.loading}></FormButton>
         </form>
+        {this.props.hasError ? (
+          <div className="Error">An error has occured</div>
+        ) : (
+          ''
+        )}
         <LaunchList
           launches={this.props.launches}
           agency={this.state.agency}

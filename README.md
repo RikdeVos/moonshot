@@ -54,3 +54,5 @@
   move this logic away from the container, and clean it up.
 - Make the UI responsive: The Form can be made responsive by simply changing the
   `flex-direction` to `column` at a breakpoint.
+- Clean up imports, by for example adding an `index.ts` file to `./components`
+  which exports all components.

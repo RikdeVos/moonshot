@@ -102,20 +102,24 @@ class Launches extends React.Component<IProps, IState> {
   }
 
   agencyChanged(agencyId: string) {
+    // Find the agency and update state
     this.setState({
       agency:
         this.props.agencies.find(
           (agency) => agency.id === parseInt(agencyId)
         ) || null,
     });
-    // console.log(agencyId);
   }
 
   typeChanged(type: string) {
     console.log(type);
   }
 
-  submitForm(event: any) {
+  /**
+   * Submit the form
+   * @param event Submit event
+   */
+  submitForm(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const { startDate, endDate } = this.state;

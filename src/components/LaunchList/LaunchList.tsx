@@ -13,7 +13,6 @@ interface IProps {
 const launchList: React.FunctionComponent<IProps> = (props: IProps) => (
   <>
     <h2>Launch List</h2>
-    {props.agency ? 'we have agency' : 'no agency'}
     <ul className="LaunchList">
       {props.launches
         .filter(

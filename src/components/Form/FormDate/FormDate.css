@@ -1,0 +1,14 @@
+.FormDate {
+  display: flex;
+  flex-direction: column;
+  margin: 0 8px;
+  /* font-weight: bold; */
+}
+
+.FormDate strong {
+  margin-bottom: 16px;
+}
+
+.FormDate input {
+  height: 20px;
+}

@@ -1,0 +1,15 @@
+.FormSelect {
+  display: flex;
+  flex-direction: column;
+  margin: 0 8px;
+  width: 160px;
+}
+
+.FormSelect strong {
+  margin-bottom: 16px;
+}
+.FormSelect select {
+  font-family: 'Quicksand', sans-serif;
+  padding: 1em;
+  height: 51px;
+}

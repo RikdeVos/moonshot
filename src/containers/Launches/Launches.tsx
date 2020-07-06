@@ -3,14 +3,18 @@ import './Launches.css';
 import { connect, ConnectedProps } from 'react-redux';
 import moment from 'moment';
 
+import axios from '../../axios-api';
+import { Agency } from '../../models/agency.interface';
+import { RootState, LOAD_LAUNCHES, LOADED_LAUNCHES } from '../../store/types';
+
 import FormDate from '../../components/Form/FormDate/FormDate';
 import FormSelect from '../../components/Form/FormSelect/FormSelect';
 import FormButton from '../../components/Form/FormButton/FormButton';
-import { Agency } from '../../models/agency.interface';
-import { RootState, LOAD_LAUNCHES } from '../../store/types';
+import LaunchList from '../../components/LaunchList/LaunchList';
 
 const mapState = (state: RootState) => ({
   loading: state.loading,
+  launches: state.launches,
 });
 
 const mapDispatch = {
@@ -23,6 +27,10 @@ const mapDispatch = {
   }) => ({
     type: LOAD_LAUNCHES,
     payload: { startDate, endDate },
+  }),
+  loadedLaunches: (launches: Launches[]) => ({
+    type: LOADED_LAUNCHES,
+    payload: launches,
   }),
 };
 
@@ -94,12 +102,26 @@ class Launches extends React.Component<IProps, IState> {
 
   submitForm(event: any) {
     event.preventDefault();
+
+    const { startDate, endDate } = this.state;
+
+    // Dispatch action
     this.props.submit({
-      startDate: this.state.startDate,
-      endDate: this.state.endDate,
+      startDate,
+      endDate,
     });
 
     // Fetch launches
+    axios
+      .get(
+        `/launch/${startDate.format('YYYY-MM-DD')}/${endDate.format(
+          'YYYY-MM-DD'
+        )}`
+      )
+      .then((response) => {
+        // Dispatch action with fetched launch dates
+        this.props.loadedLaunches(response.data.launches);
+      });
   }
 
   render() {
@@ -138,8 +160,9 @@ class Launches extends React.Component<IProps, IState> {
               { value: 'Fail', displayValue: 'Fail' },
             ]}
           ></FormSelect>
-          <FormButton loading={false}></FormButton>
+          <FormButton loading={this.props.loading}></FormButton>
         </form>
+        <LaunchList launches={this.props.launches}></LaunchList>
       </>
     );
   }

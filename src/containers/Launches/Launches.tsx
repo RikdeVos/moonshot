@@ -19,6 +19,7 @@ import FormDate from '../../components/Form/FormDate/FormDate';
 import FormSelect from '../../components/Form/FormSelect/FormSelect';
 import FormButton from '../../components/Form/FormButton/FormButton';
 import LaunchList from '../../components/LaunchList/LaunchList';
+import LaunchMap from '../../components/LaunchMap/LaunchMap';
 import { Launch } from '../../models/launch.interface';
 import { getAgenciesInLaunch } from '../../utils/launchAgencies';
 
@@ -196,6 +197,7 @@ class Launches extends React.Component<IProps, IState> {
           launches={this.props.launches}
           agency={this.state.agency}
         ></LaunchList>
+        <LaunchMap></LaunchMap>
       </>
     );
   }

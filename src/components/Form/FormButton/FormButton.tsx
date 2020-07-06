@@ -6,7 +6,7 @@ interface IProps {
 }
 
 const formButton: React.FunctionComponent<IProps> = (props: IProps) => (
-  <button className="FormButton" type="submit">
+  <button className="FormButton" type="submit" disabled={props.loading}>
     Update Map
   </button>
 );

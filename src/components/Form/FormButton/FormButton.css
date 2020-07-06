@@ -13,4 +13,8 @@
   background: #9b59b6;
   color: #fff;
   font-weight: bold;
+  cursor: pointer;
+}
+.FormButton:disabled {
+  opacity: 0.5;
 }
